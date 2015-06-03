@@ -16,13 +16,14 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.Date;
 
 
 public class TaskListActivity extends ActionBarActivity {
 
     private static final int EDIT_TASK_REQUEST = 10;
-    private Task[] mTasks;
+    private ArrayList<Task> mTasks;
     private int mLastPositionClicked;
     private TaskListAdapter mTaskAdapter;
 
@@ -31,15 +32,17 @@ public class TaskListActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_task_list);
 
-        mTasks = new Task[3];
-        mTasks[0] = new Task();
-        mTasks[0].setName("Task 0");
-        mTasks[0].setDueDate(new Date());
-        mTasks[1] = new Task();
-        mTasks[1].setName("Task 1");
-        mTasks[1].setDone(true);
-        mTasks[2] = new Task();
-        mTasks[2].setName("Task 2");
+        mTasks = new ArrayList<>();
+        mTasks.add(new Task());
+        mTasks.add(new Task());
+        mTasks.add(new Task());
+        mTasks.get(0).setName("Task 0");
+        mTasks.get(0).setDueDate(new Date());
+
+        mTasks.get(1).setName("Task 1");
+        mTasks.get(1).setDone(true);
+
+        mTasks.get(2).setName("Task 2");
         ListView listView = (ListView) findViewById(R.id.task_list);
         mTaskAdapter = new TaskListAdapter(mTasks);
         listView.setAdapter(mTaskAdapter);
@@ -60,13 +63,13 @@ public class TaskListActivity extends ActionBarActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if(requestCode == EDIT_TASK_REQUEST && resultCode == RESULT_OK) {
             Task t = (Task) data.getSerializableExtra("TaskExtra");
-            mTasks[mLastPositionClicked] = t;
+            mTasks.set(mLastPositionClicked, t);
             mTaskAdapter.notifyDataSetChanged();
         }
     }
 
     private class TaskListAdapter extends ArrayAdapter<Task>{
-        public TaskListAdapter(Task[] items){
+        public TaskListAdapter(ArrayList<Task> items){
             super(TaskListActivity.this, R.layout.task_list_row, R.id.task_item_name, items);
         }
 

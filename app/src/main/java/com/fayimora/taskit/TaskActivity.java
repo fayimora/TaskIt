@@ -84,7 +84,7 @@ public class TaskActivity extends ActionBarActivity {
 
     private void updateButton(){
         DateFormat df = DateFormat.getDateInstance();
-        mDateButton.setText(df.format(mTask.getDueDate()));
+        mDateButton.setText(df.format(mCal.getTime()));
     }
 
     @Override
