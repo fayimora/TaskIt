@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.database.DataSetObserver;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -20,29 +21,48 @@ import java.util.Date;
 
 public class TaskListActivity extends ActionBarActivity {
 
+    private static final int EDIT_TASK_REQUEST = 10;
+    private Task[] mTasks;
+    private int mLastPositionClicked;
+    private TaskListAdapter mTaskAdapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_task_list);
 
-        Task[] items = {new Task(), new Task(), new Task()};
-        items[0].setName("Task 0");
-        items[0].setDueDate(new Date());
-        items[1].setName("Task 1");
-        items[1].setDone(true);
-        items[2].setName("Task 2");
+        mTasks = new Task[3];
+        mTasks[0] = new Task();
+        mTasks[0].setName("Task 0");
+        mTasks[0].setDueDate(new Date());
+        mTasks[1] = new Task();
+        mTasks[1].setName("Task 1");
+        mTasks[1].setDone(true);
+        mTasks[2] = new Task();
+        mTasks[2].setName("Task 2");
         ListView listView = (ListView) findViewById(R.id.task_list);
-        listView.setAdapter(new TaskListAdapter(items));
+        mTaskAdapter = new TaskListAdapter(mTasks);
+        listView.setAdapter(mTaskAdapter);
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                mLastPositionClicked = position;
                 Intent i = new Intent(TaskListActivity.this, TaskActivity.class);
                 Task t = (Task) parent.getAdapter().getItem(position);
                 i.putExtra("TaskExtra", t);
-                startActivity(i);
+                startActivityForResult(i, EDIT_TASK_REQUEST);
             }
         });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(requestCode == EDIT_TASK_REQUEST && resultCode == RESULT_OK) {
+            Task t = (Task) data.getSerializableExtra("TaskExtra");
+            mTasks[mLastPositionClicked] = t;
+            mTaskAdapter.notifyDataSetChanged();
+        }
     }
 
     private class TaskListAdapter extends ArrayAdapter<Task>{
