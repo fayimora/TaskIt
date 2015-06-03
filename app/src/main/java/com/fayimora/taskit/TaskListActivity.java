@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 
 
 public class TaskListActivity extends ActionBarActivity {
@@ -29,7 +30,15 @@ public class TaskListActivity extends ActionBarActivity {
 
     private class TaskListAdapter extends ArrayAdapter<Task>{
         public TaskListAdapter(Task[] items){
-            super(TaskListActivity.this, android.R.layout.simple_list_item_1, items);
+            super(TaskListActivity.this, R.layout.task_list_row, R.id.task_item_name, items);
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            convertView = super.getView(position, convertView, parent);
+            // TextView taskName = (TextView) convertView.findViewById(R.id.task_item_name);
+            // taskName.setText("Hello World");
+            return convertView;
         }
     }
 
