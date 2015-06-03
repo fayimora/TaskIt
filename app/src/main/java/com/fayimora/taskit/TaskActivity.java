@@ -25,7 +25,7 @@ public class TaskActivity extends ActionBarActivity {
     private Button mSaveButton;
     private Calendar mCal;
     private EditText mNameInput;
-    CheckBox mDoneInput;
+    private CheckBox mDoneInput;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
