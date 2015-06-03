@@ -1,11 +1,12 @@
 package com.fayimora.taskit;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
  * Created by fayimora on 01/06/15.
  */
-public class Task {
+public class Task implements Serializable {
     private String mName;
     private Date mDueDate;
     private boolean mDone;

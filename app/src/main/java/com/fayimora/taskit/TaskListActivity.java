@@ -1,5 +1,6 @@
 package com.fayimora.taskit;
 
+import android.content.Intent;
 import android.database.DataSetObserver;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -7,11 +8,14 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import java.util.Date;
 
 
 public class TaskListActivity extends ActionBarActivity {
@@ -23,11 +27,22 @@ public class TaskListActivity extends ActionBarActivity {
 
         Task[] items = {new Task(), new Task(), new Task()};
         items[0].setName("Task 0");
+        items[0].setDueDate(new Date());
         items[1].setName("Task 1");
         items[1].setDone(true);
         items[2].setName("Task 2");
         ListView listView = (ListView) findViewById(R.id.task_list);
         listView.setAdapter(new TaskListAdapter(items));
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent i = new Intent(TaskListActivity.this, TaskActivity.class);
+                Task t = (Task) parent.getAdapter().getItem(position);
+                i.putExtra("TaskExtra", t);
+                startActivity(i);
+            }
+        });
     }
 
     private class TaskListAdapter extends ArrayAdapter<Task>{
