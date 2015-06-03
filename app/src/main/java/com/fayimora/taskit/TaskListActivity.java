@@ -8,6 +8,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -23,6 +24,7 @@ public class TaskListActivity extends ActionBarActivity {
         Task[] items = {new Task(), new Task(), new Task()};
         items[0].setName("Task 0");
         items[1].setName("Task 1");
+        items[1].setDone(true);
         items[2].setName("Task 2");
         ListView listView = (ListView) findViewById(R.id.task_list);
         listView.setAdapter(new TaskListAdapter(items));
@@ -36,8 +38,12 @@ public class TaskListActivity extends ActionBarActivity {
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             convertView = super.getView(position, convertView, parent);
-            // TextView taskName = (TextView) convertView.findViewById(R.id.task_item_name);
-            // taskName.setText("Hello World");
+            Task t = getItem(position);
+            TextView taskName = (TextView) convertView.findViewById(R.id.task_item_name);
+            taskName.setText(t.getName());
+
+            CheckBox checkBox = (CheckBox) convertView.findViewById(R.id.task_item_done);
+            checkBox.setChecked(t.isDone());
             return convertView;
         }
     }
