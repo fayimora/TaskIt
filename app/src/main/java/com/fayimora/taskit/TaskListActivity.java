@@ -5,6 +5,7 @@ import android.database.DataSetObserver;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -58,6 +59,8 @@ public class TaskListActivity extends ActionBarActivity {
                 startActivityForResult(i, EDIT_TASK_REQUEST);
             }
         });
+
+        registerForContextMenu(listView);
     }
 
     @Override
@@ -114,5 +117,24 @@ public class TaskListActivity extends ActionBarActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, v, menuInfo);
+        getMenuInflater().inflate(R.menu.menu_task_list_context, menu);
+
+    }
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if(id == R.id.delete_task) {
+            AdapterView.AdapterContextMenuInfo menuInfo = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+            mTasks.remove(menuInfo.position);
+            mTaskAdapter.notifyDataSetChanged();
+             return true;
+        }
+        return super.onContextItemSelected(item);
     }
 }
