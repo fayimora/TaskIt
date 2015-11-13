@@ -33,6 +33,7 @@ public class TaskActivity extends ActionBarActivity {
         setContentView(R.layout.activity_task);
 
         mTask = (Task) getIntent().getSerializableExtra("TaskExtra");
+        if(mTask == null) mTask = new Task();
 
         mNameInput = (EditText) findViewById(R.id.task_name);
         mNameInput.setText(mTask.getName());
