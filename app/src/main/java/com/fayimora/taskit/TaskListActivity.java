@@ -66,12 +66,11 @@ public class TaskListActivity extends ActionBarActivity {
             if (requestCode == EDIT_TASK_REQUEST) {
                 Task t = (Task) data.getSerializableExtra("TaskExtra");
                 mTasks.set(mLastPositionClicked, t);
-                mTaskAdapter.notifyDataSetChanged();
             } else if (requestCode == CREATE_TASK_REQUEST) {
                 Task t = (Task) data.getSerializableExtra("TaskExtra");
                 mTasks.add(t);
-                mTaskAdapter.notifyDataSetChanged();
             }
+            mTaskAdapter.notifyDataSetChanged();
         }
     }
 
