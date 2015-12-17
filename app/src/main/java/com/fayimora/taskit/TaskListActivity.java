@@ -5,6 +5,7 @@ import android.database.DataSetObserver;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.SparseBooleanArray;
 import android.view.ActionMode;
 import android.view.ContextMenu;
 import android.view.Menu;
@@ -30,6 +31,7 @@ public class TaskListActivity extends ActionBarActivity {
     private ArrayList<Task> mTasks;
     private int mLastPositionClicked;
     private TaskListAdapter mTaskAdapter;
+    private ListView mListView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,11 +49,11 @@ public class TaskListActivity extends ActionBarActivity {
         mTasks.get(1).setDone(true);
 
         mTasks.get(2).setName("Task 2");
-        ListView listView = (ListView) findViewById(R.id.task_list);
+        mListView = (ListView) findViewById(R.id.task_list);
         mTaskAdapter = new TaskListAdapter(mTasks);
-        listView.setAdapter(mTaskAdapter);
+        mListView.setAdapter(mTaskAdapter);
 
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 mLastPositionClicked = position;
@@ -62,9 +64,9 @@ public class TaskListActivity extends ActionBarActivity {
             }
         });
 
-//        registerForContextMenu(listView);
-        listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
-        listView.setMultiChoiceModeListener(new AbsListView.MultiChoiceModeListener() {
+//        registerForContextMenu(mListView);
+        mListView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
+        mListView.setMultiChoiceModeListener(new AbsListView.MultiChoiceModeListener() {
             @Override
             public void onItemCheckedStateChanged(ActionMode mode, int position, long id, boolean checked) {
 
@@ -83,6 +85,19 @@ public class TaskListActivity extends ActionBarActivity {
 
             @Override
             public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+                int id = item.getItemId();
+                SparseBooleanArray positions = mListView.getCheckedItemPositions();
+                if (id == R.id.delete_task) {
+                    // loop backwards to keep tasks and positions in sync
+                    for(int i=positions.size()-1; i>=0; i--) {
+                        if(positions.valueAt(i)){
+                            mTasks.remove(positions.keyAt(i));
+                        }
+                    }
+                    mode.finish();
+                    mTaskAdapter.notifyDataSetChanged();
+                    return true;
+                }
                 return false;
             }
 
